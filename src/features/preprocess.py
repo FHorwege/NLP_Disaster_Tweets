@@ -18,7 +18,7 @@ def clean_text(text):
     text = text.lower()
     text = re.sub(r'http\S+', '', text)  # Remove URLs
     text = re.sub(r'@\w+', '', text)     # Remove mentions
-    text = re.sub(r'#\w+', '', text)     # Remove hashtags
+    text = re.sub(r'#', '', text)     # Remove hashtags
     text = re.sub(r'[%s]' % re.escape(string.punctuation), '', text)  # Remove punctuation
     text = re.sub(r'\s+', ' ', text).strip()  # Remove extra whitespace
     return text
