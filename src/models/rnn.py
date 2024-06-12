@@ -48,7 +48,7 @@ model.compile(loss=tf.keras.losses.BinaryCrossentropy(from_logits=True),
                 optimizer=tf.keras.optimizers.Adam(1e-4),
                 metrics=['accuracy'])
 
-history = model.fit(train_dataset.batch(BATCH_SIZE), epochs=10, validation_data = val_dataset.batch(BATCH_SIZE), validation_steps=30)
+history = model.fit(train_dataset.batch(BATCH_SIZE), epochs=30, validation_data = val_dataset.batch(BATCH_SIZE), validation_steps=30)
 
 plt.figure(figsize=(16, 8))
 plt.subplot(1, 2, 1)
