@@ -24,7 +24,7 @@ print(stopwords.words('english'))
 
 #Data Processing
 # Load the dataset
-file_path = r'C:\MariamFork\Tweet_Disaster_ShallowLearning_NLP\src\datasets\train.csv'
+file_path = r'C:\DSClean\NLP_Disaster_Tweets\data\datasets\train.csv'
 train_data = pd.read_csv(file_path, encoding='ISO-8859-1')
 
 #givin info about colums and rows (7613, 5) basically 7614 row  starting indext 0 and 5 columns
@@ -71,12 +71,12 @@ print("Features (X):", X)
 print("Labels (Y):", Y)
 
 # Splitting the data into training data and validation data
-X_train, X_test, Y_train, Y_test = train_test_split(X, Y, test_size=0.3, stratify=Y, random_state=2)
+X_train, X_test, Y_train, Y_test = train_test_split(X, Y, test_size=0.20, stratify=Y, random_state=42)
 
 # Print shapes of the splits
 print("X_train shape:", X_train.shape)
-print("X_test shape:", X_test.shape)
 print("Y_train shape:", Y_train.shape)
+print("X_test shape:", X_test.shape)
 print("Y_test shape:", Y_test.shape)
 
 # Print a few examples to verify

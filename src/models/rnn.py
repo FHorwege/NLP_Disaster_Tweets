@@ -14,8 +14,8 @@ def plot_graphs(history, metric):
     plt.legend([metric, 'val_'+metric])
     
 
-train_df = pd.read_csv('../../data/interim/train.csv')
-val_df = pd.read_csv('../../data/interim/val.csv')
+train_df = pd.read_csv('C:/DSClean/NLP_Disaster_Tweets/data/interim/train.csv')
+val_df = pd.read_csv('C:/DSClean/NLP_Disaster_Tweets/data/interim/val.csv')
 
 BUFFER_SIZE = 10000
 BATCH_SIZE = 64

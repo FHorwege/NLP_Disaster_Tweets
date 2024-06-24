@@ -19,7 +19,7 @@ nltk.download('wordnet')
 nltk.download('averaged_perceptron_tagger')
 
 # Load the dataset
-file_path = r'C:\MariamFork\Tweet_Disaster_ShallowLearning_NLP\src\datasets\train.csv'
+file_path = r'C:/DSClean/NLP_Disaster_Tweets/data/datasets/train.csv'
 train_data = pd.read_csv(file_path, encoding='ISO-8859-1')
 
 # Initialize the Porter Stemmer and WordNet Lemmatizer
@@ -88,7 +88,7 @@ knn_accuracy = test_data_accuracy
 
 # Accuracy scores from different models (replace these with your actual scores)
 model_names = ['Decision Tree', 'Random Forest', 'Logistic Regression', 'Naive Bayes', 'KNN']
-accuracy_scores = [0.75, 0.82, 0.80, 0.78, knn_accuracy]  # Example accuracy scores with KNN
+accuracy_scores = [0.726, 0.691, 0.802, 0.609, knn_accuracy]  # Example accuracy scores with KNN
 
 # Create a DataFrame to hold the results
 results_df = pd.DataFrame({
