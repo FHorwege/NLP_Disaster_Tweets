@@ -1,18 +1,18 @@
+import sys
 import pickle
 import pandas as pd
 from sklearn.model_selection import train_test_split
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.naive_bayes import GaussianNB
-from preprocess import preprocess_dataframe  # Assuming preprocess_dataframe is a function to preprocess the DataFrame
+#from preprocess import preprocess_dataframe  # Assuming preprocess_dataframe is a function to preprocess the DataFrame
 from sklearn.metrics import accuracy_score, classification_report
-
 
 # Load the DataFrame
 from prep import train_df
 
 
 
-# Preprocess the DataFrame (if needed)
+#Preprocess the DataFrame (if needed)
 train_df = preprocess_dataframe(train_df)
 
 # Separate the data and labels
