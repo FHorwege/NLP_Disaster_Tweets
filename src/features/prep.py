@@ -66,3 +66,5 @@ print(train_df[['text', 'tokenized_text']].sample(20))
 new_df = preprocess_dataframe(train_df)
 print(new_df)
 
+def getDF():
+    return(new_df)

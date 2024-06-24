@@ -8,12 +8,14 @@ from sklearn.naive_bayes import GaussianNB
 from sklearn.metrics import accuracy_score, classification_report
 
 # Load the DataFrame
-from prep import train_df
+sys.path.insert(0,"C:/DSClean/NLP_Disaster_Tweets/src/features")
 
-
+import preprocess
+import prep
 
 #Preprocess the DataFrame (if needed)
-train_df = preprocess_dataframe(train_df)
+train_df = prep.getDF()
+train_df = preprocess.preprocess_dataframe(train_df)
 
 # Separate the data and labels
 X = train_df['text'].values  # Assuming 'text' is the column containing tokenized text
