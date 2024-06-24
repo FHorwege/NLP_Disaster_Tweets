@@ -15,7 +15,7 @@ vectorizer = TfidfVectorizer(max_features=5000)
 # function to vectorize the text data using TF-IDF
 # function to train and evaluate the SVM model
 def train_svm(text_array, target_array):
-    X_train, X_val, y_train, y_val = train_test_split(text_array, target_array, test_size=0.3, stratify=target_array, random_state=42) #added strafication
+    X_train, X_val, y_train, y_val = train_test_split(text_array, target_array, test_size=0.2, stratify=target_array, random_state=42) #added strafication
     
     with open("output_train.txt", "w") as txt_file:
         for tweet in X_train:
@@ -31,7 +31,7 @@ def train_svm(text_array, target_array):
     
     param_grid = [
         {'C': [0.1, 1, 10, 100, 1000], 'kernel': ['linear']},
-        {'C': [0.1, 1, 10, 100, 1000], 'gamma': [1, 0.1, 0.01], 'kernel': ['rbf']},
+        {'C': [0.1, 1, 10, 100, 1000], 'gamma': [1, 0.1, 0.01], 'kernel': ['rbf']}, #C till 1000 mayb too much
         {'C': [0.1, 1, 10, 100, 1000], 'gamma': [1, 0.1, 0.01], 'kernel': ['sigmoid'], 'coef0': [0.1, 0.5, 1]},
         {'C': [0.1, 1, 10, 100, 1000], 'gamma': [1, 0.1, 0.01], 'kernel': ['poly'], 'coef0': [0.1, 0.5, 1],'degree': [2, 3]}
     ]
@@ -44,7 +44,7 @@ def train_svm(text_array, target_array):
     #svm_model = SVC(C=1, gamma=0.4).fit(X_train, y_train) #default kernel rbf
     # training the model
     #svm_model.fit(X_train, y_train)
-    svm_model = param_grid_search(X_train, y_train, param_grid)
+    svm_model, grid_results = param_grid_search(X_train, y_train, param_grid)
    
     # predict on the test set
     y_pred_val = svm_model.predict(X_val)
@@ -56,7 +56,7 @@ def train_svm(text_array, target_array):
     print("Accuracy of the train portion:", accuracy_score(y_train, y_pred_train))
     print("Classification Report of train portion:\n", classification_report(y_train, y_pred_train))
 
-    return svm_model, y_val, y_pred_val
+    return svm_model, y_val, y_pred_val, grid_results
 
 def param_grid_search(X_train, y_train, param_grid):
     grid_search = GridSearchCV(SVC(), param_grid, verbose=3, cv=5, scoring='accuracy', refit=True)
@@ -66,24 +66,27 @@ def param_grid_search(X_train, y_train, param_grid):
 
     # Print the best parameters and the best score
     print("Best Parameters:", grid_search.best_params_)
-    print("Best Score:", grid_search.best_score_)
+    print("Best Accuracy Score:", grid_search.best_score_)
 
     # Make predictions with the best model
     best_model = grid_search.best_estimator_
-    
-    return best_model
+    grid_results = pd.DataFrame(grid_search.cv_results_)
+    grid_results.to_csv("/Users/oyabazer/Documents/Uni/Data Science in Practice/NLP_Disaster_Tweets/docs/grid_search_results.csv", index=False)
+
+    return best_model, grid_results
+
 
 def predict_test(df_train, df_test):
     df_train = preprocess_df(df_train)
     df_test = preprocess_df(df_test) 
    
-    svm_model, y_val, y_pred_val = train_svm(df_train['text_processed'], df_train['target'])
+    svm_model, y_val, y_pred_val, grid_results = train_svm(df_train['text_processed'], df_train['target'])
     print(svm_model.get_params())
     
     X_test = vectorizer.transform(df_test['text_processed'])
     predictions = svm_model.predict(X_test)
     
-    return predictions
+    return predictions, grid_results
 
 
 '''
