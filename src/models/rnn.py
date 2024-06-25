@@ -1,31 +1,25 @@
+import os
+# Set the current working directory
+os.chdir(r'C:\DSClean\NLP_Disaster_Tweets')
+
 import pandas as pd
 import numpy as np
 import tensorflow as tf
 import matplotlib.pyplot as plt
-import os
+import src.visualization.visualize as vis
+import src.data.make_dataset as mkd
 
-os.chdir(r'C:\Datascience\NLP_Disaster_Tweets\src\models')
 
-def plot_graphs(history, metric):
-    plt.plot(history.history[metric])
-    plt.plot(history.history['val_'+metric], '')
-    plt.xlabel("Epochs")
-    plt.ylabel(metric)
-    plt.legend([metric, 'val_'+metric])
-    
+# Create TensorFlow datasets from the training and validation data
+train_dataset = mkd.create_tf_dataset_from_csv('C:/DSClean/NLP_Disaster_Tweets/data/interim/train.csv')
+val_dataset = mkd.create_tf_dataset_from_csv('C:/DSClean/NLP_Disaster_Tweets/data/interim/val.csv')
 
-train_df = pd.read_csv('C:/DSClean/NLP_Disaster_Tweets/data/interim/train.csv')
-val_df = pd.read_csv('C:/DSClean/NLP_Disaster_Tweets/data/interim/val.csv')
-
+# Define the hyperparameters
 BUFFER_SIZE = 10000
 BATCH_SIZE = 64
 VOCAB_SIZE = 1000
 
-train_dataset = tf.data.Dataset.from_tensor_slices(
-    (train_df['text'].values, train_df['target'].values))
-val_dataset = tf.data.Dataset.from_tensor_slices(
-    (val_df['text'].values, val_df['target'].values))
-
+# Initialize the text vectorization layer
 encoder = tf.keras.layers.TextVectorization(
     max_tokens=VOCAB_SIZE)
 encoder.adapt(train_dataset.batch(BATCH_SIZE).map(lambda text, label: text))
@@ -33,6 +27,7 @@ encoder.adapt(train_dataset.batch(BATCH_SIZE).map(lambda text, label: text))
 vocab = np.array(encoder.get_vocabulary())
 vocab[:20]
 
+# Define the model architecture
 model = tf.keras.Sequential([
     tf.keras.layers.Input(shape=(1,), dtype=tf.string),
     encoder,
@@ -47,18 +42,21 @@ model = tf.keras.Sequential([
     tf.keras.layers.Dense(1)
 ])
 
+# Compile the model
 model.compile(loss=tf.keras.losses.BinaryCrossentropy(from_logits=True),
                 optimizer=tf.keras.optimizers.Adam(1e-4),
                 metrics=['accuracy'])
 
+# Train the model
 history = model.fit(train_dataset.batch(BATCH_SIZE), epochs=30, validation_data = val_dataset.batch(BATCH_SIZE), validation_steps=30)
 
+# Plot the training and validation metrics
 plt.figure(figsize=(16, 8))
 plt.subplot(1, 2, 1)
-plot_graphs(history, 'accuracy')
+plot_epoch_graphs(history, 'accuracy')
 plt.ylim(None, 1)
 plt.subplot(1, 2, 2)
-plot_graphs(history, 'loss')
+plot_epoch_graphs(history, 'loss')
 plt.ylim(0, None)
 
 plt.show()
