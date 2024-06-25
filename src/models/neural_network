@@ -1,6 +1,11 @@
-# Add comments here
-
 # Import necessary libraries
+import json
+import pandas as pd
+import numpy as np
+import tensorflow as tf
+from tensorflow.keras.preprocessing.text import Tokenizer
+from tensorflow.keras.preprocessing.sequence import pad_sequences
+
 
 # Set the parameters for tokenization and padding
 vocab_size = 10000
