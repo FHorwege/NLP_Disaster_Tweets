@@ -1,22 +1,22 @@
 import os
+# Set the current working directory
+os.chdir(r'C:\DSClean\NLP_Disaster_Tweets')
+
 import pandas as pd
 import numpy as np
 import tensorflow as tf
 from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import Embedding, LSTM, Dense, Dropout, Conv1D
 from tensorflow.keras.callbacks import EarlyStopping
-import matplotlib.pyplot as plt
+import src.visualization.visualize as vis
 
-# Set the current working directory
-os.chdir(r'C:\DSClean\NLP_Disaster_Tweets')
+
 
 import src.data.make_dataset as mkd
 
 # Create TensorFlow datasets from the training and validation data
 train_dataset = mkd.create_tf_dataset_from_csv('C:/DSClean/NLP_Disaster_Tweets/data/interim/train.csv')
 val_dataset = mkd.create_tf_dataset_from_csv('C:/DSClean/NLP_Disaster_Tweets/data/interim/val.csv')
-
-#
 
 
 # Parameters
@@ -67,20 +67,6 @@ history = model.fit(train_dataset.batch(batch_size),
                     validation_data=val_dataset.batch(batch_size),
                     callbacks=[early_stopping])
 
-# Function to plot training and validation metrics
-def plot_epoch_graphs(history, metric):
-    plt.plot(history.history[metric])
-    plt.plot(history.history['val_'+metric], '')
-    plt.xlabel("Epochs")
-    plt.ylabel(metric)
-    plt.legend([metric, 'val_'+metric])
 
-# Plot the training and validation metrics
-plt.figure(figsize=(12, 6))
-plt.subplot(1, 2, 1)
-plot_epoch_graphs(history, 'accuracy')
-plt.ylim(None, 1)
-plt.subplot(1, 2, 2)
-plot_epoch_graphs(history, 'loss')
-plt.ylim(0, None)
-plt.show()
+vis.plot_nn_training(history)
+print(dir(vis))
