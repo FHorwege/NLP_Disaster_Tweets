@@ -68,5 +68,5 @@ history = model.fit(train_dataset.batch(batch_size),
                     callbacks=[early_stopping])
 
 
-vis.plot_nn_training(history)
+vis.plot_epoch_graphs(history)
 print(dir(vis))
