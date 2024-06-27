@@ -37,9 +37,9 @@ if __name__ == '__main__':
     print("Cleaned Text:", cleaned_text)"""
     # specifying the file paths
     df_train = pd.read_csv('C:/DSClean/NLP_Disaster_Tweets/data/external/train.csv')
-    df_test = pd.read_csv('C:\DSClean/NLP_Disaster_Tweets/data/external/test.csv')
-    path_to_predictions_csv = '/Users/oyabazer/Documents/Uni/Data Science in Practice/NLP_Disaster_Tweets/docs/predictions.csv' 
-    path_to_grid_results_csv = '/Users/oyabazer/Documents/Uni/Data Science in Practice/NLP_Disaster_Tweets/docs/grid_search_results.csv'
+    df_test = pd.read_csv('C:/DSClean/NLP_Disaster_Tweets/data/external/test.csv')
+    path_to_predictions_csv = 'C:/DSClean/NLP_Disaster_Tweets/data/SVM_Pred/predictions.csv' 
+    path_to_grid_results_csv = 'C:/DSClean/NLP_Disaster_Tweets/data/SVM_Pred/grid_search_results.csv'
     
     # getting predictions and grid results
     predictions, grid_results = predict_test(df_train, df_test)
