@@ -1,4 +1,5 @@
 import os
+import sys
 import pandas as pd
 import numpy as np
 import tensorflow as tf
@@ -8,14 +9,15 @@ from tensorflow.keras.callbacks import EarlyStopping
 import matplotlib.pyplot as plt
 
 # Set the current working directory
-os.chdir(r'C:\DSClean\NLP_Disaster_Tweets')
+sys.path.insert(0,"C:/DSClean/NLP_Disaster_Tweets/src/visualization")
+sys.path.insert(0,"C:/DSClean/NLP_Disaster_Tweets/src/data")
 
-import src.data.make_dataset as mkd
+
+import make_dataset as mkd
 
 # Create TensorFlow datasets from the training and validation data
 train_dataset = mkd.create_tf_dataset_from_csv('C:/DSClean/NLP_Disaster_Tweets/data/interim/train.csv')
 val_dataset = mkd.create_tf_dataset_from_csv('C:/DSClean/NLP_Disaster_Tweets/data/interim/val.csv')
-
 #
 
 
