@@ -1,10 +1,5 @@
 import os
-<<<<<<< HEAD
-# Set the current working directory
-os.chdir(r'C:\DSClean\NLP_Disaster_Tweets')
-
-=======
->>>>>>> b1f03e46649e15c5e23d7d8188b7095a5395a497
+import sys
 import pandas as pd
 import numpy as np
 import tensorflow as tf
@@ -20,15 +15,15 @@ from src.visualization.visualize import plot_epoch_graphs
 import matplotlib.pyplot as plt
 
 # Set the current working directory
-os.chdir(r'C:\DSClean\NLP_Disaster_Tweets')
->>>>>>> b1f03e46649e15c5e23d7d8188b7095a5395a497
+sys.path.insert(0,"C:/DSClean/NLP_Disaster_Tweets/src/visualization")
+sys.path.insert(0,"C:/DSClean/NLP_Disaster_Tweets/src/data")
 
-import src.data.make_dataset as mkd
+
+import make_dataset as mkd
 
 # Create TensorFlow datasets from the training and validation data
 train_dataset = mkd.create_tf_dataset_from_csv('C:/DSClean/NLP_Disaster_Tweets/data/interim/train.csv')
 val_dataset = mkd.create_tf_dataset_from_csv('C:/DSClean/NLP_Disaster_Tweets/data/interim/val.csv')
-
 #
 
 
