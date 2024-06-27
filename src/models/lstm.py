@@ -1,18 +1,20 @@
 import os
+import sys
 # Set the current working directory
-os.chdir(r'C:\DSClean\NLP_Disaster_Tweets')
+sys.path.insert(0,"C:/DSClean/NLP_Disaster_Tweets/src/visualization")
+sys.path.insert(0,"C:/DSClean/NLP_Disaster_Tweets/src/data")
 
+
+import visualize as vis
 import pandas as pd
 import numpy as np
 import tensorflow as tf
 from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import Embedding, LSTM, Dense, Dropout, Conv1D
 from tensorflow.keras.callbacks import EarlyStopping
-import src.visualization.visualize as vis
 
 
-
-import src.data.make_dataset as mkd
+import make_dataset as mkd
 
 # Create TensorFlow datasets from the training and validation data
 train_dataset = mkd.create_tf_dataset_from_csv('C:/DSClean/NLP_Disaster_Tweets/data/interim/train.csv')
