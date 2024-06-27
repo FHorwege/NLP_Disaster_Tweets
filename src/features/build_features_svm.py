@@ -2,7 +2,7 @@ import pandas as pd
 from sklearn.model_selection import train_test_split, GridSearchCV
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.svm import SVC
-from sklearn.metrics import classification_report, accuracy_score
+from sklearn.metrics import classification_report, accuracy_score, make_scorer, precision_score, recall_score, f1_score
 from src.features.preprocessing import preprocess_df
 from numpy import array
 
@@ -45,7 +45,15 @@ def train_svm(text_array, target_array):
     return svm_model, grid_results, y_val, y_pred_val
 
 def param_grid_search(X_train, y_train, param_grid):
-    grid_search = GridSearchCV(SVC(), param_grid, verbose=3, cv=5, scoring='accuracy', refit=True)
+    
+    scoring = {
+        'accuracy': 'accuracy',
+        'precision': make_scorer(precision_score, average='weighted', zero_division=0),
+        'recall': make_scorer(recall_score, average='weighted', zero_division=0),
+        'f1_score': make_scorer(f1_score, average='weighted', zero_division=0)
+    }
+    
+    grid_search = GridSearchCV(SVC(), param_grid, verbose=3, cv=5, scoring=scoring, refit='accuracy', return_train_score=True)
 
     # fitting the GridSearchCV to the data
     grid_search.fit(X_train, y_train)
@@ -53,6 +61,13 @@ def param_grid_search(X_train, y_train, param_grid):
     # printing the best hyperparameter combination and the best accuracy score from the grid search
     print("Best Parameters:", grid_search.best_params_)
     print("Best Accuracy Score:", grid_search.best_score_)
+    
+    # printing additional metric scores
+    best_index = grid_search.best_index_
+    print("Best Precision Score:", grid_search.cv_results_['mean_test_precision'][best_index])
+    print("Best Recall Score:", grid_search.cv_results_['mean_test_recall'][best_index])
+    print("Best F1 Score:", grid_search.cv_results_['mean_test_f1_score'][best_index])
+
 
     best_model = grid_search.best_estimator_
     grid_results = pd.DataFrame(grid_search.cv_results_)
