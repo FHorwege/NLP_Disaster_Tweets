@@ -20,7 +20,7 @@ nltk.download('stopwords')
 #  stopwords does not add influential meaning
 
 # Load the dataset
-file_path = r'C:\MariamFork\Tweet_Disaster_ShallowLearning_NLP\src\datasets\train.csv'
+file_path = r'C:/DSClean/NLP_Disaster_Tweets/data/datasets/train.csv'
 train_df = pd.read_csv(file_path, usecols=['keyword', 'text', 'target'])
 
 
