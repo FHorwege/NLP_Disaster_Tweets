@@ -42,7 +42,7 @@ if __name__ == '__main__':
     path_to_grid_results_csv = 'C:/DSClean/NLP_Disaster_Tweets/data/SVM_Pred/grid_search_results.csv'
     
     # getting predictions and grid results
-    predictions, grid_results = predict_test(df_train, df_test)
+    predictions, grid_results, y_val, y_pred_val = predict_test(df_train, df_test)
     
     df_test['predictions'] = predictions   #predict_test(df_train, df_test) modified for being able to get the grid results
     df_test.to_csv(path_to_predictions_csv, index=False)

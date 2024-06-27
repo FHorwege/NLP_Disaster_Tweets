@@ -36,11 +36,12 @@ plt.show()
 
 
 # Load the grid search results
-grid_results = grid_results.sort_values("mean_test_score", ascending=False).head(10)
+grid_results = pd.read_csv("C:/DSClean/NLP_Disaster_Tweets/data/interim/grid_search_results.csv")
+grid_results = grid_results.sort_values("mean_test_accuracy", ascending=False).head(10)
 
 # Extract relevant data for plotting
-mean_test_scores = grid_results['mean_test_score']
-std_test_scores = grid_results['std_test_score']
+mean_test_scores = grid_results['mean_test_accuracy']
+std_test_scores = grid_results['std_test_accuracy']
 params = grid_results['params']
 
 # Function to wrap text for better readability
@@ -68,11 +69,11 @@ grid_results = pd.read_csv("C:/DSClean/NLP_Disaster_Tweets/data/interim/grid_sea
 grid_results['kernel'] = grid_results['params'].apply(lambda x: eval(x)['kernel'])
 
 # Sort and get the best 2 parameter combinations for each kernel
-best_per_kernel = grid_results.groupby('kernel').apply(lambda x: x.nlargest(2, 'mean_test_score')).reset_index(drop=True)
+best_per_kernel = grid_results.groupby('kernel').apply(lambda x: x.nlargest(2, 'mean_test_accuracy')).reset_index(drop=True)
 
 # Extract relevant data for plotting
-mean_test_scores = best_per_kernel['mean_test_score']
-std_test_scores = best_per_kernel['std_test_score']
+mean_test_scores = best_per_kernel['mean_test_accuracy']
+std_test_scores = best_per_kernel['std_test_accuracy']
 params = best_per_kernel['params']
 kernels = best_per_kernel['kernel']
 
