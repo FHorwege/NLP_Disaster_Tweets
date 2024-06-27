@@ -23,6 +23,7 @@ def plot_graphs(history, metric):
 train_df = pd.read_csv('C:/DSClean/NLP_Disaster_Tweets/data/interim/train.csv')
 val_df = pd.read_csv('C:/DSClean/NLP_Disaster_Tweets/data/interim/val.csv')
 
+
 # Load DistilBERT tokenizer
 tokenizer = DistilBertTokenizer.from_pretrained('distilbert-base-uncased')
 
@@ -72,16 +73,17 @@ output = tf.keras.layers.Dense(1, activation='sigmoid', name='output_layer')(cls
 model = tf.keras.Model(inputs=[input_ids, attention_mask], outputs=output, name='distilbert_model')
 
 # Compile the model with optimizer
-model.compile(optimizer=tf.keras.optimizers.Adam(learning_rate=1e-4),
+model.compile(optimizer=tf.keras.optimizers.Adam(learning_rate=1e-5),
               loss=tf.keras.losses.BinaryCrossentropy(),
               metrics=['accuracy'])
 
 # Train the model
 history = model.fit(
     train_dataset,
-    epochs=3,
+    epochs=1,
     validation_data=val_dataset
 )
+
 
 # Plot the results
 plt.figure(figsize=(16, 8))

@@ -1,0 +1,152 @@
+import pandas as pd
+from sklearn.metrics import classification_report, accuracy_score, confusion_matrix, ConfusionMatrixDisplay
+import matplotlib.pyplot as plt
+import numpy as np
+import os
+import sys
+import textwrap
+from IPython.display import display, Markdown
+from wordcloud import WordCloud
+sys.path.append(os.path.abspath(os.path.join(os.getcwd(), '../../')))
+sys.path.insert(0,"C:/DSClean/NLP_Disaster_Tweets/src/features")
+from preprocessing import preprocess_df
+from build_features_svm import param_grid_search, predict_test
+
+
+df_train = pd.read_csv('C:/DSClean/NLP_Disaster_Tweets/data/external/train.csv')
+df_test = pd.read_csv('C:/DSClean/NLP_Disaster_Tweets/data/external/test.csv')
+grid_results = pd.read_csv("C:/DSClean/NLP_Disaster_Tweets/data/interim/grid_search_results.csv")
+
+predictions, grid_results, y_val, y_pred_val = predict_test(df_train, df_test)
+
+# computing the confusion matrix
+cm = confusion_matrix(y_val, y_pred_val)
+
+
+# plotting the confusion matrix
+disp = ConfusionMatrixDisplay(confusion_matrix=cm)
+disp.plot(cmap=plt.cm.Purples)
+
+# Add labels and title
+plt.xlabel('Predicted label')
+plt.ylabel('True label')
+plt.title('Confusion Matrix')
+
+plt.show()
+
+
+# Load the grid search results
+grid_results = grid_results.sort_values("mean_test_score", ascending=False).head(10)
+
+# Extract relevant data for plotting
+mean_test_scores = grid_results['mean_test_score']
+std_test_scores = grid_results['std_test_score']
+params = grid_results['params']
+
+# Function to wrap text for better readability
+def wrap_labels(labels, width):
+    return ['\n'.join(textwrap.wrap(label, width)) for label in labels]
+
+# Wrap the parameters
+wrapped_params = wrap_labels(params, 30)  # Adjust the width as needed
+
+# Create a bar plot with error bars
+plt.figure(figsize=(23, 15))
+plt.bar(range(len(mean_test_scores)), mean_test_scores, yerr=std_test_scores, capsize=5)
+plt.xticks(range(len(wrapped_params)), wrapped_params, rotation=0, ha='center', fontsize=10)
+plt.xlabel('Parameter Combinations', labelpad=20)
+plt.ylabel('Accuracy', labelpad=20)
+plt.title('Top 10 Grid Search Accuracy Scores')
+plt.tight_layout()
+plt.show()
+
+
+# Load the grid search results
+grid_results = pd.read_csv("C:/DSClean/NLP_Disaster_Tweets/data/interim/grid_search_results.csv")
+
+# Extract the kernel information from params
+grid_results['kernel'] = grid_results['params'].apply(lambda x: eval(x)['kernel'])
+
+# Sort and get the best 2 parameter combinations for each kernel
+best_per_kernel = grid_results.groupby('kernel').apply(lambda x: x.nlargest(2, 'mean_test_score')).reset_index(drop=True)
+
+# Extract relevant data for plotting
+mean_test_scores = best_per_kernel['mean_test_score']
+std_test_scores = best_per_kernel['std_test_score']
+params = best_per_kernel['params']
+kernels = best_per_kernel['kernel']
+
+# Function to wrap text for better readability
+def wrap_labels(labels, width):
+    return ['\n'.join(textwrap.wrap(label, width)) for label in labels]
+
+# Wrap the parameters
+wrapped_params = wrap_labels(params, 30)  # Adjust the width as needed
+
+# Create a bar plot with error bars and different colors for each kernel
+plt.figure(figsize=(16, 16))
+unique_kernels = best_per_kernel['kernel'].unique()
+colors = plt.cm.PRGn(np.linspace(0, 1, len(unique_kernels)))
+
+# Calculate the positions for each bar
+bar_width = 0.2
+positions = np.arange(len(wrapped_params))
+
+# Plot bars for each kernel
+for i, kernel in enumerate(unique_kernels):
+    indices = best_per_kernel[best_per_kernel['kernel'] == kernel].index
+    plt.bar(positions[indices], mean_test_scores[indices], yerr=std_test_scores[indices], capsize=5, width=bar_width, label=kernel, color=colors[i])
+    
+max_score = mean_test_scores.max()
+plt.axhline(y=max_score, color='r', linestyle='-', linewidth=1.5)
+#plt.text(1, max_score, f'Max Score: {max_score:.4f}', color='black', ha='right', va='top')
+
+
+# Adjust the x-axis ticks and labels
+plt.xticks(positions, wrapped_params, rotation=0, ha='center', fontsize=10)
+
+# Add some padding to the x-axis label
+plt.xlabel('Parameter Combinations', labelpad=20)
+plt.ylabel('Accuracy', labelpad=20)
+plt.title('Top 2 Grid Search Accuracy Scores for Each Kernel')
+plt.legend(title='Kernel', loc='right', bbox_to_anchor=(0.99, 0.06), ncol=2)
+plt.tight_layout()
+
+# Add padding to the bottom of the plot to separate x-axis labels from the x-axis
+plt.subplots_adjust(bottom=0.3)
+
+# Add value labels to each bar
+for i, kernel in enumerate(unique_kernels):
+    indices = best_per_kernel[best_per_kernel['kernel'] == kernel].index
+    for j in indices:
+        plt.text(positions[j], mean_test_scores[j] + std_test_scores[j] + 0.01, f'{mean_test_scores[j]:.4f}', ha='center', va='bottom', fontsize=8, color='black')
+
+plt.show()
+
+# Load the predictions
+predictions_df = pd.read_csv('C:/DSClean/NLP_Disaster_Tweets/data/SVM_Pred/predictions.csv')
+colors = ['thistle', 'darkgreen']
+
+# Plot the distribution of predictions
+plt.figure(figsize=(10, 6))
+predictions_df['predictions'].value_counts().plot(kind='bar', color=colors)
+plt.xlabel('Predicted Class')
+plt.ylabel('Frequency', labelpad=20)
+plt.title('Distribution of Predictions')
+plt.xticks(rotation=0)
+plt.show()
+
+# Load the predictions
+predictions_df = pd.read_csv('C:/DSClean/NLP_Disaster_Tweets/data/SVM_Pred/predictions.csv')
+
+# Function to display examples for a given class
+def display_examples(class_label, examples):
+    display(pd.DataFrame(examples, columns=[f'Examples for Predicted Class {class_label}']))
+
+# Display example predictions
+num_examples = 5
+for class_label in predictions_df['predictions'].unique():
+    display(Markdown(f"#### Examples for Predicted Class {class_label}"))
+    examples = predictions_df[predictions_df['predictions'] == class_label]['text'].head(num_examples)
+    display_examples(class_label, examples.tolist())
+    display(Markdown("\n"))
