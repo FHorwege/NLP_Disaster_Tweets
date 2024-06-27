@@ -3,6 +3,16 @@ Natural Language Processing with Disaster Tweets
 
 Project for the "data science in practice" course.
 
+Installation:
+
+To make it run properly create a folder named "DSClean" in "C:/"
+
+-> "C:/DSClean/
+
+Pull the Repository into that folder.
+
+All of the references in the code are made to that source.
+
 Project Organization
 ------------
 
