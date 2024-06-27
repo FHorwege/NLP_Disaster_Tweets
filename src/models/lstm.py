@@ -1,9 +1,4 @@
 import os
-<<<<<<< HEAD
-# Set the current working directory
-os.chdir(r'C:\DSClean\NLP_Disaster_Tweets')
-
-=======
 import sys
 # Set the current working directory
 sys.path.insert(0,"C:/DSClean/NLP_Disaster_Tweets/src/visualization")
@@ -11,24 +6,15 @@ sys.path.insert(0,"C:/DSClean/NLP_Disaster_Tweets/src/data")
 
 
 import visualize as vis
->>>>>>> b1f03e46649e15c5e23d7d8188b7095a5395a497
 import pandas as pd
 import numpy as np
 import tensorflow as tf
 from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import Embedding, LSTM, Dense, Dropout, Conv1D
 from tensorflow.keras.callbacks import EarlyStopping
-<<<<<<< HEAD
-import src.visualization.visualize as vis
-from src.visualization.visualize import plot_epoch_graphs
-
-
-import src.data.make_dataset as mkd
-=======
 
 
 import make_dataset as mkd
->>>>>>> b1f03e46649e15c5e23d7d8188b7095a5395a497
 
 # Create TensorFlow datasets from the training and validation data
 train_dataset = mkd.create_tf_dataset_from_csv('C:/DSClean/NLP_Disaster_Tweets/data/interim/train.csv')
@@ -59,10 +45,7 @@ model = Sequential([
     Dense(64, activation='relu'),
     Dropout(dropout_rate),
     LSTM(lstm_units),
-<<<<<<< HEAD
-=======
     Dropout(dropout_rate),
->>>>>>> b1f03e46649e15c5e23d7d8188b7095a5395a497
     Dense(1, activation='sigmoid')
 ])
 
@@ -87,12 +70,5 @@ history = model.fit(train_dataset.batch(batch_size),
                     callbacks=[early_stopping])
 
 
-<<<<<<< HEAD
-# get val_loss and val_accuracy
-val_loss, val_accuracy = model.evaluate(val_dataset.batch(batch_size))
-
-plot_epoch_graphs(history)
-=======
 vis.plot_epoch_graphs(history)
 print(dir(vis))
->>>>>>> b1f03e46649e15c5e23d7d8188b7095a5395a497

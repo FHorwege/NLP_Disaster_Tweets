@@ -72,14 +72,14 @@ output = tf.keras.layers.Dense(1, activation='sigmoid', name='output_layer')(cls
 model = tf.keras.Model(inputs=[input_ids, attention_mask], outputs=output, name='distilbert_model')
 
 # Compile the model with optimizer
-model.compile(optimizer=tf.keras.optimizers.Adam(learning_rate=1e-5),
+model.compile(optimizer=tf.keras.optimizers.Adam(learning_rate=1e-4),
               loss=tf.keras.losses.BinaryCrossentropy(),
               metrics=['accuracy'])
 
 # Train the model
 history = model.fit(
     train_dataset,
-    epochs=1,
+    epochs=3,
     validation_data=val_dataset
 )
 
